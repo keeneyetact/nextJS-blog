@@ -1,18 +1,38 @@
+import Router from 'next/router'
 import Head from 'next/head';
+import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 
-export default function Home() {
+export async function getServerSideProps(context) {
+  const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  const json = await res.json()
+  
+  return {
+     props: { stars: json.stargazers_count }
+  }
+}
+
+export default function Home(props) {
   return (
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div>Welcome to Next.js!</div>
+      <span onClick={() => Router.push('/posts/one')}>First Post</span>
+      <span onClick={() => Router.push('/?counter=1', undefined, { shallow: true })}>Reload</span>
+      {/* <Link href="/posts/first">First Post</Link> */}
+      <br/>
+      <div>Next stars: {props.stars}</div>
+      <img src="/logo.png" alt="TutorialsPoint Logo" />
 
       <main>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        <br/>
+         
 
         <p className={styles.description}>
           Get started by editing <code>pages/index.js</code>
